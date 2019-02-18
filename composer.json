@@ -1,0 +1,24 @@
+{
+    "name": "a-sabagh/simple-file-uploader",
+    "type": "library",
+    "description": "Simple and Secure PHP File Upload with great options and very light and easy to use.",
+    "keywords": ["uploader", "files", "file-handling"],
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Abolfazl Sabagh",
+            "email": "me@asabagh.ir",
+            "homepage": "http://asabagh.ir",
+			"role": "developer"
+        }
+    ],
+    "require": {
+        "php": "^5.3.3 || ^7.0"
+    },
+	"require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "SimpleUploader\\": "src/"
+        }
+    }
+}
