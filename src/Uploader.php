@@ -1,7 +1,9 @@
 <?php
 namespace SimpleUploader;
+use Exception;
 
 class Uploader {
+
     protected $destination;
     protected $messages;
     protected $uploadOk = TRUE;
@@ -10,14 +12,16 @@ class Uploader {
     protected $fileType = array("image/jpeg", "image/png", "image/webp", "image/x-icon", "application/zip", "application/pdf", "application/x-rar-compressed");
     protected $blacklistExt = array("js", "py", "exe", "php", "dmg", "php3", "php4", "phtml", "pl", "jsp", "asp", "htm", "shtml", "sh", "cgi");
     protected $suffix = ".txt";
+    protected $ids;
+
     /**
      * create destination with this template '$folder/year/month/'
      * @param type $destination
      * @throws Exception
      */
-    function __construct($destination = __DIR__) 
+    function __construct($destination) 
 	{
-        if (is_dir($destination) and is_writable($destination)) {
+        if (is_dir($destination)) {
             $perma_path = "";
             $year = date("Y");
             $month = date("m");
@@ -26,23 +30,25 @@ class Uploader {
             } else {
                 $perma_path = "{$destination}{$year}/{$month}/";
             }
-            if (!is_dir($destination)) {
-                mkdir($destination, 0755, TRUE);
+            if (!is_dir($perma_path)) {
+                mkdir($perma_path, 0755, TRUE);
             }
             $this->destination = $perma_path;
         } else {
-            throw new Exception("{$destination} must be real directory and be writable");
+            throw new Exception("{$destination} must be valid path and writable");
         }
     }
+
     /**
      * uploading proccess for multiple and singular uploading file
      * @param type $file
      */
     public function upload($file) 
 	{
-        if (is_array($file)) {
+        if (is_array($file['name'])) {
             $current_file = array();
             $count = count(current($file));
+			$result = [];
             for ($i = 0; $i < $count; $i++) {
                 $current['name'] = $file['name'][$i];
                 $current['type'] = $file['type'][$i];
@@ -56,6 +62,7 @@ class Uploader {
                     $this->moveFileUpload($current);
                 }
             }
+			return $result;
         } else {
             $this->checkName($file['name']);
             $this->checkFile($file);
@@ -64,6 +71,7 @@ class Uploader {
             }
         }
     }
+
     /**
      * neutralize blacklist extension file
      * @param type $filename
@@ -72,10 +80,12 @@ class Uploader {
 	{
         $pathinfo = pathinfo($filename);
         $extension = $pathinfo['extension'];
+
         if (in_array($extension, $this->blacklistExt)) {
             $this->fileName = $this->fileName . $this->suffix;
         }
     }
+
     /**
      * checking size and type and error of the uploading file
      * @param type $file
@@ -92,6 +102,7 @@ class Uploader {
             $this->uploadOk = FALSE;
         }
     }
+
     /**
      * convert string value to byte for example 1Mb = 1024 byte
      * @param type $string
@@ -116,6 +127,7 @@ class Uploader {
             return FALSE;
         }
     }
+
     /**
      * seting max size for uploading file and check it with ini server max size
      * @param type $size
@@ -127,12 +139,13 @@ class Uploader {
         $size = (int) $size;
         $serverMaxSize = (int) $serverMaxSize;
         if ($size > $serverMaxSize) {
-            throw new Exception("{$size} is greater than server maximum file size");
+            throw new Exception("{$size} begger than valid server size.");
         }
         if (is_numeric($size) and ! empty($size) and $size !== 0) {
             $this->fileSize = $size;
         }
     }
+
     /**
      * checking size of uploading file 
      * @param type $size
@@ -141,12 +154,13 @@ class Uploader {
     protected function checkSize($size) 
 	{
         if ($size > $this->fileSize) {
-            $this->messages[] = $this->fileName . " is to big";
+            $this->messages[] = $this->fileName . " is to big.";
             return FALSE;
         } else {
             return TRUE;
         }
     }
+
     /**
      * set type for uploading file
      * @param type $array_type
@@ -157,9 +171,10 @@ class Uploader {
         if (is_array($array_type)) {
             $this->fileType = $array_type;
         } else {
-            throw new Exception("uploadCenter::setType parameter must be array");
+            throw new Exception("uploadCenter::setType must be array");
         }
     }
+
     /**
      * checking type of uploading file 
      * @param type $type
@@ -167,13 +182,15 @@ class Uploader {
      */
     protected function checkType($type) 
 	{
-        if (in_array($type, $this->fileType)) {
+        if (in_array($type, $this->fileType)) 
+		{
             return TRUE;
         } else {
-            $this->messages[] = "type of {$type} file is illegal";
+            $this->messages[] = "Format {$type} is invalid.";
             return FALSE;
         }
     }
+
     /**
      * checking error of uploading file
      * @param type $error
@@ -207,6 +224,7 @@ class Uploader {
                 return FALSE;
         }
     }
+
     /**
      * checking name of uploading file for rename file that exist in folder and replace space with  underscore
      * and neutrilize blacklist extencion
@@ -232,6 +250,7 @@ class Uploader {
         }
         return TRUE;
     }
+
     /**
      * moving uploaded file from temp directory to permanenet path
      * finally showing message if file rename 
@@ -245,19 +264,28 @@ class Uploader {
         $result = move_uploaded_file($temp_path, $destination);
         if ($result) {
             if ($file['name'] !== $this->fileName) {
-                $this->messages[] = "{$file['name']} is rename to " . $this->fileName;
+                $this->messages[] = "{$file['name']} renamed to " . $this->fileName;
             }
-            $this->messages[] = $this->fileName . " was uploaded successfully";
+            $this->messages[] = $this->fileName . " successfully uploaded.";
         } else {
-            $this->messages[] = "uploading " . $this->fileName . " fail";
+            $this->messages[] = "upload " . $this->fileName . " failed.";
         }
     }
+	
     /**
      * show array messages
      * @return type
      */
-    public function getMessage() 
+    public function getMessages() 
 	{
         return $this->messages;
+    }
+    /**
+     * return attachment id's was uploaded
+     * @return type
+     */
+    public function getIds()
+	{
+        return $this->ids;
     }
 }
