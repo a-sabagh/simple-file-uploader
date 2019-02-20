@@ -1,12 +1,13 @@
 <?php
 
 namespace SimpleUploader;
+
 use Exception;
 
 class Uploader {
 
     protected $destination;
-	protected $startPath;
+    protected $startPath;
     protected $messages = array();
     protected $uploadOk = TRUE;
     protected $fileName = NULL;
@@ -22,22 +23,30 @@ class Uploader {
      */
     function __construct($destination) {
         if (is_dir($destination) && is_writable($destination)) {
-			$this->startPath = $destination;
-            $perma_path = "";
-            $year = date("Y");
-            $month = date("m");
-            if ($destination[strlen($destination) - 1] !== "/") {
-                $perma_path = "{$destination}/{$year}/{$month}/";
-            } else {
-                $perma_path = "{$destination}{$year}/{$month}/";
-            }
-            if (!is_dir($perma_path)) {
-                mkdir($perma_path, 0755, TRUE);
-            }
-            $this->destination = $perma_path;
+            $this->makeDestination($destination);
         } else {
             throw new Exception("{$destination} must be real directory and be writable");
         }
+    }
+
+    /**
+     * make directory for destination using year and mounth
+     * @param type $destination
+     */
+    protected function makeDestination($destination) {
+        $this->startPath = $destination;
+        $perma_path = "";
+        $year = date("Y");
+        $month = date("m");
+        if ($destination[strlen($destination) - 1] !== "/") {
+            $perma_path = "{$destination}/{$year}/{$month}/";
+        } else {
+            $perma_path = "{$destination}{$year}/{$month}/";
+        }
+        if (!is_dir($perma_path)) {
+            mkdir($perma_path, 0755, TRUE);
+        }
+        $this->destination = $perma_path;
     }
 
     /**
@@ -45,7 +54,7 @@ class Uploader {
      * @param type $file
      */
     public function upload($file) {
-		$output = array();
+        $output = array();
         if (is_array($file['name']) && count($file['name']) > 1) {
             $current_file = array();
             $count = count(current($file));
@@ -55,67 +64,56 @@ class Uploader {
                 $current['tmp_name'] = $file['tmp_name'][$i];
                 $current['error'] = $file['error'][$i];
                 $current['size'] = $file['size'][$i];
-                $this->checkName($current['name']);
+                $this->fileName = $this->checkName($current['name']);
                 $this->uploadOk = TRUE;
-                $this->checkFile($current,$i);
+                $this->checkFile($current, $i);
                 if ($this->uploadOk) {
-                    $result = $this->moveFileUpload($current,$i);
-					$output[] = $this->prepareOutput($result);
+                    $result = $this->moveFileUpload($current, $i);
+                    $output[] = $this->prepareOutput($result);
                 }//uploadOk
             }//for loop
         } else {
-            $this->checkName($file['name']);
+            $this->fileName = $this->checkName($file['name']);
             $this->checkFile($file);
             if ($this->uploadOk) {
                 $result = $this->moveFileUpload($file);
-				$output[] = $this->prepareOutput($result);
+                $output[] = $this->prepareOutput($result);
             }//uploadOk
         }//is array
-		return $output;
+        return $output;
     }
-	/**
+
+    /**
      * Prepare file information to return by upload method
      */
-	protected function prepareOutput($result){
-		if($result){
-			$pathInfo = pathinfo($this->fileName);
-			$output = array(
-				'filename' => $pathInfo['filename'],
-				'basename' => $pathInfo['basename'],
-				'path' => str_replace($this->startPath,"",$this->destination) . $this->fileName,
-				'extension' => $pathInfo['extension'],
-				'size' => filesize($this->destination . $this->fileName)
-			);
-		}else{
-			$output = false;
-		}
-		return $output;
-	}
-    /**
-     * neutralize blacklist extension file
-     * @param type $filename
-     */
-    protected function neutralizeBlacklistExt($filename) {
-        $pathinfo = pathinfo($filename);
-        $extension = $pathinfo['extension'];
-
-        if (in_array($extension, $this->blacklistExt)) {
-            $this->fileName = $this->fileName . $this->suffix;
+    protected function prepareOutput($result) {
+        if ($result) {
+            $pathInfo = pathinfo($this->fileName);
+            $output = array(
+                'filename' => $pathInfo['filename'],
+                'basename' => $pathInfo['basename'],
+                'path' => str_replace($this->startPath, "", $this->destination) . $this->fileName,
+                'extension' => $pathInfo['extension'],
+                'size' => filesize($this->destination . $this->fileName)
+            );
+        } else {
+            $output = false;
         }
+        return $output;
     }
 
     /**
      * checking size and type and error of the uploading file
      * @param type $file
      */
-    protected function checkFile($file,$i=0) {
-        if (!$this->checkSize($file['size'],$i)) {
+    protected function checkFile($file, $i = 0) {
+        if (!$this->checkSize($file['size'], $i)) {
             $this->uploadOk = FALSE;
         }
-        if (!$this->checkType($file['type'],$i)) {
+        if (!$this->checkType($file['type'], $i)) {
             $this->uploadOk = FALSE;
         }
-        if (!$this->checkError($file['error'],$i)) {
+        if (!$this->checkError($file['error'], $i)) {
             $this->uploadOk = FALSE;
         }
     }
@@ -156,7 +154,7 @@ class Uploader {
         if ($size > $serverMaxSize) {
             throw new Exception("{$size} is greater than server maximum file size");
         }
-        if (is_numeric($size) && ! empty($size) && $size !== 0) {
+        if (is_numeric($size) && !empty($size) && $size !== 0) {
             $this->fileSize = $size;
         }
     }
@@ -193,7 +191,7 @@ class Uploader {
      * @param type $type
      * @return boolean
      */
-    protected function checkType($type,$i) {
+    protected function checkType($type, $i = 0) {
         if (in_array($type, $this->fileType)) {
             return TRUE;
         } else {
@@ -207,7 +205,7 @@ class Uploader {
      * @param type $error
      * @return boolean
      */
-    protected function checkError($error,$i) {
+    protected function checkError($error, $i) {
         switch ($error) {
             case 0:
                 return TRUE;
@@ -239,25 +237,26 @@ class Uploader {
      * checking name of uploading file for rename file that exist in folder and replace space with  underscore
      * and neutrilize blacklist extencion
      * @param type $name
-     * @return boolean
+     * @return string $name
      */
     protected function checkName($name) {
         if (strpos($name, " ")) {
-            $this->fileName = str_replace(" ", "_", $name);
-        } else {
-            $this->fileName = $name;
+            $name = str_replace(" ", "_", $name);
         }
-        $this->neutralizeBlacklistExt($name);
-        $existing_files = scandir($this->destination);
-        $pathinfo = pathinfo($this->fileName);
+
+        $pathinfo = pathinfo($name);
         $extension = $pathinfo['extension'];
         $filename = $pathinfo['filename'];
+        if (in_array($extension, $this->blacklistExt)) {
+            $name = $name . $this->suffix;
+        }
+        $existing_files = scandir($this->destination);
         $i = 1;
-        while (in_array($this->fileName, $existing_files)) {
-            $this->fileName = $filename . "_{$i}." . $extension;
+        while (in_array($name, $existing_files)) {
+            $name = $filename . "_{$i}." . $extension;
             $i++;
         }
-        return TRUE;
+        return $name;
     }
 
     /**
@@ -265,7 +264,7 @@ class Uploader {
      * finally showing message if file rename 
      * @param type $file
      */
-    protected function moveFileUpload($file,$i=0) {
+    protected function moveFileUpload($file, $i = 0) {
 
         $temp_path = $file['tmp_name'];
         $destination = $this->destination;
@@ -276,10 +275,10 @@ class Uploader {
                 $this->messages[$i]['rename'] = "{$file['name']} is rename to " . $this->fileName;
             }
             $this->messages[$i]['success'] = $this->fileName . " was uploaded successfully";
-			return true;
+            return true;
         } else {
             $this->messages[$i]['error'][] = "uploading " . $this->fileName . " fail";
-			return false;
+            return false;
         }
     }
 
