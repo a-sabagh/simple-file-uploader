@@ -171,5 +171,24 @@ class Example extends TestCase {
             ["inde x.png","inde_x.png"],
         ];
     }
+    
+    /**
+     * check file size
+     * @test
+     */
+    public function checkSize() {
+        $this->handle->setMaxSize(5 * 1024);
+        $result = $this->invokeMethod($this->handle, "checkSize",[6 * 1024]);
+        $this->assertFalse($result);
+    }
 
+    /**
+     * check file type
+     * @test
+     */
+    public function checkType(){
+        $this->handle->setType(['image/png']);
+        $result = $this->invokeMethod($this->handle, "checkType",["image/png"]);
+        $this->assertTrue($result);
+    }
 }

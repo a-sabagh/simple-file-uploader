@@ -164,7 +164,7 @@ class Uploader {
      * @param type $size
      * @return boolean
      */
-    protected function checkSize($size) {
+    protected function checkSize($size,$i=0) {
         if ($size > $this->fileSize) {
             $this->messages[$i]['error'][] = $this->fileName . " is to big";
             return FALSE;
@@ -205,7 +205,7 @@ class Uploader {
      * @param type $error
      * @return boolean
      */
-    protected function checkError($error, $i) {
+    protected function checkError($error, $i=0) {
         switch ($error) {
             case 0:
                 return TRUE;
