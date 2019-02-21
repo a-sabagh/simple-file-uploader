@@ -14,17 +14,17 @@ You can access to faker objects by according blew following table:
 
 ```php
 use SimpleUploader\Uploader;
-$hanle = new Uploader(__DIR__ . "/uploads");
+$handle = new Uploader(__DIR__ . "/uploads");
 ```
 
 `Uploader` class just accept one parameter as destination of uploader files
 
 | Method | Parameter | Return | Descriptions |
 | --- | --- | -- | -- |
-| ``` $hanle->setType() ``` | Array | Void | Set acceptable file type for Uploading |
-| ``` $hanle->setMaxSize() ``` | Integer | Void | Set max size for file in Byte |
-| ``` $hanle->getMessages() ``` | Null | Array | Get result message of uploading procccess |
-| ``` $hanle->upload() ``` | $_FILE[file_name] | Array | Upload files and return uploading files info |
+| ``` $handle->setType() ``` | Array | Void | Set acceptable file type for Uploading |
+| ``` $handle->setMaxSize() ``` | Integer | Void | Set max size for file in Byte |
+| ``` $handle->getMessages() ``` | Null | Array | Get result message of uploading procccess |
+| ``` $handle->upload() ``` | $_FILE[file_name] | Array | Upload files and return uploading files info |
 
 ## License
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
