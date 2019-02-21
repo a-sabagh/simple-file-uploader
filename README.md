@@ -24,7 +24,7 @@ $handle = new Uploader(__DIR__ . "/uploads");
 | ``` $handle->setType() ``` | Array | Void | Set acceptable file type for Uploading |
 | ``` $handle->setMaxSize() ``` | Integer | Void | Set max size for file in Byte |
 | ``` $handle->getMessages() ``` | Null | Array | Get result message of uploading procccess |
-| ``` $handle->upload() ``` | $_FILE[file_name] | Array | Upload files and return uploading files info |
+| ``` $handle->upload() ``` | `$_FILE['file_name']` | Array | Upload files and return uploading files info |
 
 ## License
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
