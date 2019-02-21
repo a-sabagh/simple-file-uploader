@@ -13,11 +13,10 @@ if you never willing to using composer you can download from <a href="https://gi
 You can access to faker objects by according blew following table:
 
 ```php
-// use the a-sabagh namespace
-
 use SimpleUploader\Uploader;
 $hanle = new Uploader(__DIR__ . "/uploads");
 ```
+
 `Uploader` class just accept one parameter as destination of uploader files
 
 | Method | Parameter | Return | Descriptions |
