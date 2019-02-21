@@ -9,7 +9,7 @@
             "name": "Abolfazl Sabagh",
             "email": "me@asabagh.ir",
             "homepage": "http://asabagh.ir",
-			"role": "developer"
+	    "role": "developer"
         }
     ],
     "require": {
