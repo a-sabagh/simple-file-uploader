@@ -55,7 +55,7 @@ class Uploader {
      */
     public function upload($file) {
         $output = array();
-        if (is_array($file['name']) && count($file['name']) > 1) {
+        if (is_array($file['name'])) {
             $current_file = array();
             $count = count(current($file));
             for ($i = 0; $i < $count; $i++) {
