@@ -23,7 +23,7 @@ $handle = new Uploader(__DIR__ . "/uploads");
 | --- | --- | -- | -- |
 | ``` $handle->setType() ``` | Array | Void | Set acceptable file type for Uploading |
 | ``` $handle->setMaxSize() ``` | Integer | Void | Set max size for file in Byte |
-| ``` $handle->getMessages() ``` | NULL | Array | Get result message of uploading procccess |
+| ``` $handle->getMessages() ``` | NULL | Array | Get result message of uploading proccess |
 | ``` $handle->upload() ``` | `$_FILE['file_name']` | Array | Upload files and return uploading files info |
 
 ## License
