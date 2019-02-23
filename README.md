@@ -8,7 +8,7 @@ to install simple-file-uploader in your php project you can using composer
 ```
 composer require a-sabagh/simple-file-uploader
 ```
-if you never willing to using composer you can download from [Package](https://github.com/a-sabagh/simple-file-uploader) and require `src/Uploader.php`
+if you never willing to using composer you can download from [Package](https://github.com/a-sabagh/simple-file-uploader) and require `src/Uploader.php` and use namespace
 ## Usage
 You can access to faker objects by according blew following table[GitHub](http://github.com):
 
