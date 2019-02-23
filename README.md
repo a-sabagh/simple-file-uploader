@@ -1,5 +1,4 @@
 [![Latest Stable Version](https://poser.pugx.org/a-sabagh/simple-file-uploader/v/stable)](https://packagist.org/packages/a-sabagh/simple-file-uploader)
-[![Latest Unstable Version](https://poser.pugx.org/a-sabagh/simple-file-uploader/v/unstable)](https://packagist.org/packages/a-sabagh/simple-file-uploader)
 [![Total Downloads](https://poser.pugx.org/a-sabagh/simple-file-uploader/downloads)](https://packagist.org/packages/a-sabagh/simple-file-uploader)
 [![License](https://poser.pugx.org/a-sabagh/simple-file-uploader/license)](https://packagist.org/packages/a-sabagh/simple-file-uploader)
 [![composer.lock](https://poser.pugx.org/a-sabagh/simple-file-uploader/composerlock)](https://packagist.org/packages/a-sabagh/simple-file-uploader)
