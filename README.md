@@ -14,14 +14,14 @@ composer require a-sabagh/simple-file-uploader
 ```
 if you never willing to using composer you can download from [Package](https://github.com/a-sabagh/simple-file-uploader) and require `src/Uploader.php` and use namespace
 ## Usage
-You can access to faker objects by according blew following table[GitHub](http://github.com):
+first,use name space and create object from `Uploader` class
 
 ```php
 use SimpleUploader\Uploader;
 $handle = new Uploader(__DIR__ . "/uploads");
 ```
 
-`Uploader` class just accept one parameter as destination of uploader files
+`Uploader` class just accept one parameter as a destination of uploader files
 
 | Method | Parameter | Return | Descriptions |
 | --- | --- | -- | -- |
