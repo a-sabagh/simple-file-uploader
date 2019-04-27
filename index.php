@@ -9,11 +9,11 @@ if (isset($_POST['submit'])) {
         $attachment = new Uploader(__DIR__ . "/uploads");
         $attachment->setMaxSize($max_size);
         $attachment->setType(array("image/jpeg", "image/png", "image/webp", "image/x-icon", "application/zip", "application/pdf", "application/x-rar-compressed"));
+        $result = $attachment->upload($_FILES['file_name']);
+        $messages = $attachment->getMessages();
     } catch (Exception $e) {
         $exception_error = $e->getMessage();
     }
-    $result = $attachment->upload($_FILES['file_name']);
-    $messages = $attachment->getMessages();
 }
 ?>
 <!DOCTYPE html>
